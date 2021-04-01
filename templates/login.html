@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+  <form method="post" style="padding: 10px; width: 30%">
+      {% csrf_token %}
+      {% include 'form.html' with form=form %}
+
+      <button type="submit" class="btn btn-primary" style="margin: 15px 0">Login</button>
+  </form>
+{% endblock %}

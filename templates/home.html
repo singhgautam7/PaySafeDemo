@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+    <style>
+        .loader {
+              border: 4px solid #b0bec5; /* Light grey */
+              border-top: 6px solid #3498db; /* Blue */
+              border-radius: 50%;
+              width: 30px;
+              height: 30px;
+              animation: spin 0.7s linear infinite;
+            }
+
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+    </style>
+
+    {% if user.is_authenticated %}
+        <p style="margin: 10px">Welcome, <strong>{{ user.first_name }}</strong>. Thanks for logging in. <br>
+            {% if user.email %}Your email is <strong>{{ user.email }}</strong> <br>{% endif %}
+            Please enter amount and checkout</p>
+
+        <form method="post" novalidate style="padding: 10px; width: 30%">
+          {% csrf_token %}
+
+            {% include 'form.html' with form=form %}
+
+            <div style="display: flex; flex-direction: row; align-items: center">
+                <button type="submit" class="btn btn-primary" style="margin: 15px 0;">Save Data and Checkout</button>
+                <div class="loader" id="id_loader" style="margin: 0 15px; visibility: hidden"></div>
+            </div>
+
+        </form>
+
+    {% else %}
+        <p style="margin: 10px">Welcome, New User. Please log in or sign up to pay.</p>
+    {% endif %}
+
+    <script>
+        function htmlDecode(input) {
+            let doc = new DOMParser().parseFromString(input, "text/html");
+            return doc.documentElement.textContent;
+        }
+
+        function checkout() {
+            console.log("Called function checkout()")
+            let amount = "{{ form.data.amount }}"
+            let mobile = "{{ form.data.mobile }}"
+            let add = "{{ user.profile.address }}"
+            let address = htmlDecode(add)
+            console.log("amt", amount)
+            console.log("add", address)
+
+            paysafe.checkout.setup("{{ private_public_key }}", {
+                "currency": "USD",
+                "amount": amount * 100,
+                "singleUseCustomerToken": "{{ customer_token }}",
+                "locale": "en_US",
+                "customer": {
+                    "firstName": "{{ user.first_name }}",
+                    "lastName": "{{ user.last_name }}",
+                    "email": "{{ user.email }}",
+                    "phone": mobile,
+                    "dateOfBirth": {
+                        "day": 1,
+                        "month": 7,
+                        "year": 1990
+                    }
+                },
+                "billingAddress": {
+                    "nickName": "{{ user.first_name }}" + ' ' + "{{ user.last_name }}",
+                    "street": address,
+                    "street2": "",
+                    "city": "{{ user.profile.city }}",
+                    "zip": "{{ user.profile.pincode }}",
+                    "country": "IN",
+                    "state": ""
+                },
+                "environment": "TEST",
+                "merchantRefNum": "1559900597607",
+                "canEditAmount": false,
+                "payout": true,
+                "payoutConfig":{
+                    "maximumAmount": 100000
+                    },
+                "displayPaymentMethods":["card"],
+                "paymentMethodDetails": {
+                    "sightline": {
+                        "consumerId": "123456"
+                    },
+                    "skrill": {
+                        "consumerId": "john.doe@email.com",
+                        "emailSubject": "Skrill Payout",
+                        "emailMessage": "Your Skrill Payout request has been processed"
+                    },
+                    "instantach": {
+                        "consumerId": "john.doe@email.com",
+                        "paymentId": "3aeb9c63-6386-46a3-9f8e-f452e722228a",
+                        "emailSubject": "Instant ACH Payout",
+                        "emailMessage": "Your Instant ACH Payout request has been processed"
+                    },
+                    "vippreferred":{
+                        "consumerId": "550726575"
+                    },
+                    "paypal": {
+                        "consumerId": "sb-cpfxo1472281@personal.example.com",
+                        "consumerMessage": "Paysafe note to payer",
+                         "recipientType": "PAYPAL_ID"
+                    }
+                }
+            }, function(instance, error, result) {
+                document.getElementById("id_loader").style.visibility='hidden';
+                if (result && result.paymentHandleToken) {
+                    console.log(result.paymentHandleToken);
+                    // make AJAX call to Payments API
+                } else {
+                    console.error(error);
+                    // Handle the error
+                }
+            }, function(stage, expired) {
+                document.getElementById("id_loader").style.visibility='hidden';
+                switch(stage) {
+                    case "PAYMENT_HANDLE_NOT_CREATED":
+                        console.log("case 1")
+                        break
+
+                    case "PAYMENT_HANDLE_CREATED":
+                        console.log("case 2")
+                        break
+
+                    case "PAYMENT_HANDLE_REDIRECT":
+                        console.log("case 3")
+                        break
+
+                    case "PAYMENT_HANDLE_PAYABLE":
+                        console.log("case 4")
+                        break
+
+                    default:
+                        console.log("default")
+                        break
+                }
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', function() {
+            let is_submit_clicked_int = {{ form.data.is_submit_clicked }}
+            if (is_submit_clicked_int === 1) {
+                document.getElementById("id_loader").style.visibility='visible';
+                checkout()
+            }
+        }, false);
+
+    </script>
+
+{% endblock %}

@@ -1,0 +1,25 @@
+db.sqlite3
+healthpotliEnv
+.env
+
+*.xml
+*.zip
+
+#Migrations
+.idea/*
+.idea/
+.idea/HealthPotliServer.iml
+.idea/misc.xml
+__pycache__/
+__pycache__/*
+*__pycache__/*
+
+##Media sent by user
+#**/media/user/*
+#**/media/*
+
+#env file
+#.env
+.vscode/
+
+Paysafe/properties/.env
