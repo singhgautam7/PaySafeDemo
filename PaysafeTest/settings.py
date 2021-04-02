@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
 from pathlib import Path
+import django_heroku
 
 import environ
 
@@ -133,3 +134,5 @@ LOGIN_REDIRECT_URL = 'login'
 
 PAYSAFE_PRIVATE_KEY = env('PAYSAFE_PRIVATE_KEY')
 PAYSAFE_PUBLIC_KEY = env('PAYSAFE_PUBLIC_KEY')
+
+django_heroku.settings(locals())
