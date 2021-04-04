@@ -24,7 +24,7 @@ class SignUpForm(UserCreationForm):
 class PaymentForm(forms.Form):
     mobile = forms.IntegerField(required=False)
 
-    address = forms.CharField(max_length=2000, required=False)
+    street = forms.CharField(max_length=2000, required=False)
     city = forms.CharField(max_length=50, required=False)
     pincode = forms.IntegerField(required=False)
 

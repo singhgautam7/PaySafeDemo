@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, redirect
 
-from PaysafeTest.settings import PAYSAFE_PUBLIC_KEY, PAYSAFE_PRIVATE_KEY
+from PaysafeTest.settings import PAYSAFE_PUBLIC_KEY
 from payments.forms import SignUpForm, PaymentForm
 from payments.helper import HelperPaySafe
 
@@ -21,7 +21,7 @@ def home(request):
             form.data['is_submit_clicked'] = 1
 
             profile_instance = request.user.profile
-            profile_instance.address = form.cleaned_data.get('address')
+            profile_instance.address = form.cleaned_data.get('street')
             profile_instance.mobile = form.cleaned_data.get('mobile')
             profile_instance.city = form.cleaned_data.get('city')
             profile_instance.pincode = form.cleaned_data.get('pincode')
@@ -43,7 +43,6 @@ def home(request):
         form = PaymentForm(initial=init_data)
     return render(request=request, template_name="home.html", context={'form': form,
                                                                        'paysafe_public_key': PAYSAFE_PUBLIC_KEY,
-                                                                       'private_public_key': PAYSAFE_PRIVATE_KEY,
                                                                        'customer_token': customer_token})
 
 

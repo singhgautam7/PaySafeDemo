@@ -9,7 +9,7 @@ class Profile(models.Model):
     django_user = models.OneToOneField(User, on_delete=models.CASCADE)
     paysafe_user_id = models.CharField(max_length=50, blank=True, default='')
 
-    mobile = models.BigIntegerField(unique=True, null=True)
+    mobile = models.BigIntegerField(null=True)
 
     address = models.TextField(blank=True, default='')
     city = models.CharField(max_length=64, blank=True, default='')

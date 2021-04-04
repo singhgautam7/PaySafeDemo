@@ -14,8 +14,9 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from payments import views as payment_views
+from payments import apis as payment_apis
 
 urlpatterns = [
 
@@ -24,6 +25,11 @@ urlpatterns = [
     path('signup/', payment_views.signup, name='signup'),
     path('login/', payment_views.login_view, name='login'),
     path('logout/', payment_views.logout_view, name='logout'),
+    path('api-auth/', include('rest_framework.urls')),
+
+    # API urls
+    path('api/payment/process/amount/<int:amount>/token/<slug:token>/', payment_apis.process_payment,
+         name='api-process'),
 
     # Admin url
     path('admin/', admin.site.urls),

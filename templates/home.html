@@ -55,7 +55,7 @@
             console.log("amt", amount)
             console.log("add", address)
 
-            paysafe.checkout.setup("{{ private_public_key }}", {
+            paysafe.checkout.setup("{{ paysafe_public_key }}", {
                 "currency": "USD",
                 "amount": amount * 100,
                 "singleUseCustomerToken": "{{ customer_token }}",
@@ -116,10 +116,31 @@
                 document.getElementById("id_loader").style.visibility='hidden';
                 if (result && result.paymentHandleToken) {
                     console.log(result.paymentHandleToken);
+
+                    let amount = "{{ form.data.amount }}" * 100
+                    let token = result.paymentHandleToken
+                    $.ajax({
+                        type: "POST",
+                        url: "/api/payment/process/amount/"+ amount + "/token/" + token + "/",
+                        contentType: "application/json",
+                        {#data: JSON.stringify(requestBody,),#}
+                        success: (data) => {
+                            console.log("result of process payment:")
+                            console.log(data);
+
+                            if (data.success === true) {
+                                instance.showSuccessScreen("Payment Successful!");
+                            } else {
+                                instance.showFailureScreen("Payment was declined. Try again with the same or another payment method.");
+                            }
+                            setTimeout(function(){window.location.replace(window.location.href);}, 10000);
+
+                        }
+                    });
                     // make AJAX call to Payments API
                 } else {
+                    alert("Error Occurred" + error.detailedMessage)
                     console.error(error);
-                    // Handle the error
                 }
             }, function(stage, expired) {
                 document.getElementById("id_loader").style.visibility='hidden';

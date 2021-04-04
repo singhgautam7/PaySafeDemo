@@ -2,7 +2,7 @@ import json
 
 import requests
 
-from PaysafeTest.settings import PAYSAFE_PUBLIC_KEY
+from PaysafeTest.settings import PAYSAFE_PRIVATE_KEY
 
 
 class HelperPaySafe:
@@ -32,7 +32,7 @@ class HelperPaySafe:
 
         headers = {
             'Content-Type': 'application/json',
-            'Authorization': 'Basic ' + PAYSAFE_PUBLIC_KEY,
+            'Authorization': 'Basic ' + PAYSAFE_PRIVATE_KEY,
             'Simulator': '\'EXTERNAL\''
         }
         req = requests.post('https://api.test.paysafe.com/paymenthub/v1/customers', json=val, headers=headers)
@@ -59,7 +59,7 @@ class HelperPaySafe:
         url = 'https://api.test.paysafe.com/paymenthub/v1/customers?merchantCustomerId=' + merchant_customer_id
         headers = {
             'Content-Type': 'application/json',
-            'Authorization': 'Basic ' + PAYSAFE_PUBLIC_KEY,
+            'Authorization': 'Basic ' + PAYSAFE_PRIVATE_KEY,
             'Simulator': '\'EXTERNAL\''
         }
         req = requests.get(url, headers=headers)
@@ -88,7 +88,7 @@ class HelperPaySafe:
 
         headers = {
             'Content-Type': 'application/json',
-            'Authorization': 'Basic ' + PAYSAFE_PUBLIC_KEY,
+            'Authorization': 'Basic ' + PAYSAFE_PRIVATE_KEY,
             'Simulator': '\'EXTERNAL\''
         }
         val = {
