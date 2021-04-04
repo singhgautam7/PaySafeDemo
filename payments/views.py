@@ -66,6 +66,7 @@ def signup(request):
 
 
 def login_view(request):
+    message = ''
     if request.method == 'POST':
         form = AuthenticationForm(request=request, data=request.POST)
         if form.is_valid():
@@ -77,11 +78,14 @@ def login_view(request):
                 messages.info(request, f"You are now logged in as {username}")
                 return redirect('/')
             else:
+                message = 'Invalid username or password'
                 messages.error(request, "Invalid username or password.")
         else:
+            message = 'Invalid username or password.'
             messages.error(request, "Invalid username or password.")
     form = AuthenticationForm()
-    return render(request=request, template_name="login.html", context={"form": form})
+    return render(request=request, template_name="login.html", context={"form": form,
+                                                                        "message": message})
 
 
 def logout_view(request):
