@@ -54,6 +54,7 @@
             let address = htmlDecode(add)
             console.log("amt", amount)
             console.log("add", address)
+            console.log("customer token", "{{ customer_token }}")
 
             paysafe.checkout.setup("{{ paysafe_public_key }}", {
                 "currency": "USD",
