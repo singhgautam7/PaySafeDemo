@@ -31,12 +31,13 @@ def home(request):
         if django_user_instance.is_authenticated:
             init_data = {
                 'mobile': django_user_instance.profile.mobile,
-                'address': django_user_instance.profile.address,
+                'street': django_user_instance.profile.address,
                 'city': django_user_instance.profile.city,
                 'pincode': django_user_instance.profile.pincode,
                 'paysafe_user_id': django_user_instance.profile.paysafe_user_id,
                 'is_submit_clicked': 0,
             }
+
         else:
             init_data = {}
 
