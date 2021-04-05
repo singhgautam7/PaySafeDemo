@@ -60,7 +60,6 @@
                 "currency": "USD",
                 "amount": amount * 100,
                 "singleUseCustomerToken": "{{ customer_token }}",
-                "locale": "en_US",
                 "customer": {
                     "firstName": "{{ user.first_name }}",
                     "lastName": "{{ user.last_name }}",
@@ -84,35 +83,15 @@
                 "environment": "TEST",
                 "merchantRefNum": "1559900597607",
                 "canEditAmount": false,
-                "payout": true,
+                "payout": false,
                 "payoutConfig":{
                     "maximumAmount": 100000
                     },
-                "displayPaymentMethods":["card"],
                 "paymentMethodDetails": {
-                    "sightline": {
-                        "consumerId": "123456"
+                    "paysafecard": {
+                        "consumerId": "1232323"
                     },
-                    "skrill": {
-                        "consumerId": "john.doe@email.com",
-                        "emailSubject": "Skrill Payout",
-                        "emailMessage": "Your Skrill Payout request has been processed"
-                    },
-                    "instantach": {
-                        "consumerId": "john.doe@email.com",
-                        "paymentId": "3aeb9c63-6386-46a3-9f8e-f452e722228a",
-                        "emailSubject": "Instant ACH Payout",
-                        "emailMessage": "Your Instant ACH Payout request has been processed"
-                    },
-                    "vippreferred":{
-                        "consumerId": "550726575"
-                    },
-                    "paypal": {
-                        "consumerId": "sb-cpfxo1472281@personal.example.com",
-                        "consumerMessage": "Paysafe note to payer",
-                         "recipientType": "PAYPAL_ID"
-                    }
-                }
+                },
             }, function(instance, error, result) {
                 document.getElementById("id_loader").style.visibility='hidden';
                 if (result && result.paymentHandleToken) {
